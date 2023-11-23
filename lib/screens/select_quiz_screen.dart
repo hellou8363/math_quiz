@@ -77,7 +77,7 @@ class _SelectQuizScreenState extends State<SelectQuizScreen> {
         width: 150,
         height: 150,
         decoration: BoxDecoration(
-          color: Colors.blue[200],
+          color: Colors.black,
           borderRadius: BorderRadius.circular(10),
         ),
         child: Icon(
@@ -107,7 +107,7 @@ class _SelectQuizScreenState extends State<SelectQuizScreen> {
       child: Container(
         height: 80,
         decoration: BoxDecoration(
-          color: Colors.blue[200],
+          color: Colors.black,
           borderRadius: BorderRadius.circular(10),
         ),
         alignment: Alignment.center,
@@ -116,6 +116,7 @@ class _SelectQuizScreenState extends State<SelectQuizScreen> {
           style: const TextStyle(
             fontSize: 20,
             fontWeight: FontWeight.bold,
+            color: Colors.white,
           ),
         ),
       ),

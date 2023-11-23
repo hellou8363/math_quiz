@@ -27,7 +27,17 @@ class _SplashScreenState extends State<SplashScreen> {
   Widget build(BuildContext context) {
     // Google ML Kit를 다운로드 받는 동안 보여줄 페이지
     return Scaffold(
-      body: Text('SplashScreen'),
+      body: SafeArea(
+        child: Center(
+          child: Text(
+            'SplashScreen',
+            style: TextStyle(
+              fontSize: 20,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+        ),
+      ),
     );
   }
 }
