@@ -4,8 +4,6 @@
 import 'dart:ui';
 
 class DotInfo {
-  // Offset : 화면에서의 위치를 나타내는 객체
-  // X, Y 좌표를 가지며, 점이 화면 상의 어디에 위치하는지 나타냄
   final Offset offset;
   final double size;
   final Color color;

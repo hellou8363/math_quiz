@@ -21,6 +21,7 @@ class QuizSolutionScreen extends StatefulWidget {
 class _QuizSolutionScreenState extends State<QuizSolutionScreen> {
   bool _eraseMode = false;
 
+
   @override
   Widget build(BuildContext context) {
     var p = Provider.of<DrawingProvider>(context);
@@ -45,8 +46,8 @@ class _QuizSolutionScreenState extends State<QuizSolutionScreen> {
               },
               child: Image.asset(
                 _eraseMode
-                    ? 'assets/img/eraser_off.png'
-                    : 'assets/img/eraser_on.png',
+                    ? 'assets/img/eraser_on.png'
+                    : 'assets/img/eraser_off.png',
                 width: 30,
                 height: 30,
                 scale: 2,
@@ -188,4 +189,6 @@ class _QuizSolutionScreenState extends State<QuizSolutionScreen> {
       ),
     );
   }
+  
+  // TODO: level에 따라 randomNumber 추출 메서드 필요
 }
