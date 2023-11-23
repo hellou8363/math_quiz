@@ -1,4 +1,8 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:math_quiz/screens/utils/drawing_painter.dart';
+import 'package:math_quiz/screens/utils/drawing_provider.dart';
+import 'package:provider/provider.dart';
 
 class QuizSolutionScreen extends StatefulWidget {
   final String selectedQuiz;
@@ -15,16 +19,12 @@ class QuizSolutionScreen extends StatefulWidget {
 }
 
 class _QuizSolutionScreenState extends State<QuizSolutionScreen> {
+  bool _eraseMode = false;
+
   @override
   Widget build(BuildContext context) {
-    /*
-    - 손으로 답을 쓸 수 있도록 디지털 잉크 사용
-    - 답을 지울 수 있는 지우개 필요(전체 지우개)
-    - 문제 위에 메모 할 수 있는 기능 필요(부분 지우개 or 전체 지우개)
-    - 상단에 문제 풀이 개수 / 전체 개수
-    - 정답을 자릿수 별로 받을지 전체 받을지 결정 필요
-    - 안드로이드 버전에서 전체로 받으면서 자릿수가 긴 답을 문자로 인식해서 오류가 있었음
-     */
+    var p = Provider.of<DrawingProvider>(context);
+
     String sign = widget.selectedQuiz;
     int level = widget.level;
     int count = 1;
@@ -38,10 +38,18 @@ class _QuizSolutionScreenState extends State<QuizSolutionScreen> {
           Center(
             child: InkWell(
               onTap: () {
-                print('메모 삭제');
+                setState(() {
+                  _eraseMode = !_eraseMode;
+                });
+                p.changeEraseMode();
               },
-              child: const Text(
-                '메모 삭제',
+              child: Image.asset(
+                _eraseMode
+                    ? 'assets/img/eraser_off.png'
+                    : 'assets/img/eraser_on.png',
+                width: 30,
+                height: 30,
+                scale: 2,
               ),
             ),
           ),
@@ -51,40 +59,76 @@ class _QuizSolutionScreenState extends State<QuizSolutionScreen> {
       body: SafeArea(
         child: Column(
           children: [
-            Padding(
-              padding: const EdgeInsets.all(20),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
-                crossAxisAlignment: CrossAxisAlignment.end,
-                children: [
-                  Text(
-                    '$sign',
-                    style: const TextStyle(
-                      fontSize: 80,
-                      fontWeight: FontWeight.bold,
+            Expanded(
+              child: ClipRRect(
+                child: Stack(
+                  children: [
+                    Column(
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.all(20),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceAround,
+                            crossAxisAlignment: CrossAxisAlignment.end,
+                            children: [
+                              Text(
+                                '$sign',
+                                style: const TextStyle(
+                                  fontSize: 80,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                              const SizedBox(width: 30),
+                              Column(
+                                children: [
+                                  _number(123),
+                                  _number(321),
+                                ],
+                              ),
+                            ],
+                          ),
+                        ),
+                        const Divider(
+                          color: Colors.black,
+                          height: 5,
+                          thickness: 5,
+                          indent: 15,
+                          endIndent: 15,
+                        ),
+                        const Expanded(child: SizedBox()),
+                      ],
                     ),
-                  ),
-                  const SizedBox(width: 30),
-                  Column(
-                    children: [
-                      _number(123),
-                      _number(321),
-                    ],
-                  ),
-                ],
+                    Positioned.fill(
+                      child: CustomPaint(
+                        painter: DrawingPainter(p.lines),
+                      ),
+                    ),
+                    GestureDetector(
+                      behavior: HitTestBehavior.translucent,
+                      onPanStart: (s) {
+                        if (p.eraseMode) {
+                          p.erase(s.localPosition);
+                        } else {
+                          p.drawStart(s.localPosition);
+                        }
+                      },
+                      onPanUpdate: (s) {
+                        if (p.eraseMode) {
+                          p.erase(s.localPosition);
+                        } else {
+                          p.drawing(s.localPosition);
+                        }
+                      },
+                      child: Container(),
+                    ),
+                  ],
+                ),
               ),
             ),
-            const Divider(
-              color: Colors.black,
-              height: 5,
-              thickness: 5,
-              indent: 15,
-              endIndent: 15,
-            ),
-            const Expanded(child: SizedBox()),
             Column(
               children: [
-                Container( // 디지털 잉크 인식 부분
+                Container(
+                  // 디지털 잉크 인식 부분
                   width: 400,
                   height: 200,
                   decoration: BoxDecoration(
